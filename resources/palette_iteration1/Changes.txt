@@ -1,0 +1,15 @@
+Changes made since last iteration:
+- Prompted user to turn on sound; without audio, the toy has much less satisfaction and engagement and the "goal" is
+difficult to discover
+- Changed volume of corner sounds and "victory" sound due to it being loud compared to the movement sound
+- Added column checking functionality; hopefully to reinforce what the "goal" of the toy is
+
+Other notes:
+- Most users didn't notice you could drag and drop more than one square, but I felt the visual noise of indicating this
+functionality would take away from the experience more than just discovery (and it's not necessary to move a block
+more than one space at a time)
+- This toy functions kind of like a game as well as a toy. I had feedback that making it more like a true toy might
+involve removing the "victory" sounds, but I felt that engagement was higher having a "goal" while still being fun to
+mess with if you weren't trying to achieve said "goal"
+- Most users didn't realize the "solution" is the cover image.
+- All users understood that the corner pieces could not be moved, according to my playtesting survey
