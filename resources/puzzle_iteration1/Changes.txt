@@ -1,0 +1,8 @@
+Changes made since last iteration:
+- Changed the highlight issue, sprites are now outlined in gray if not selected and in color when selected
+- Errors occurred on finishing the final level and resetting and I didn't feel like it was as satisfying because you couldn't see the completed puzzle. Instead you reload if you want to restart.
+- Added levels up to Level 8
+
+Other notes:
+- Users struggled with selection of pieces the most, and knowing when a sprite was selected. To fix this I changed border highlights and display text.
+- There are still some weird visuals with some of the outlines because of Perlenspiel, since I can't have two different colors for different sides of a border
