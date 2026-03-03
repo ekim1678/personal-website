@@ -56,11 +56,13 @@ let gameOver;
 let startIndex = 0;
 let strand1slots = [];
 let strand2slots = [];
+let baseSlotNum = [2, 4, 8, 10, 12, 14, 17, 19, 21, 23, 26, 28]; //keeps track of what row num so we can put glyphs in the appropriate place
+let lastEmptySlot = -1;
 
 PS.init = function( system, options ) {
 	// Uncomment the following code line
 	// to verify operation:
-	PS.gridSize(30, 30);
+	PS.gridSize(25, 30);
 
 	PS.statusText( "Synthesis" );
 	PS.seed(0.5); //set seed
@@ -178,18 +180,108 @@ PS.init = function( system, options ) {
 	PS.glyph(16, 1, "R");
 	PS.glyph(17, 1, "E");
 	PS.glyph(18, 1, ":");
+	PS.glyph(19, 1, "0");
 
 	gameOver = false;
 	timer = PS.timerStart(60, frame);
 	//remove grid lines
 	PS.border(PS.ALL, PS.ALL, {top : 0, left : 0, bottom : 0, right : 0});
-	//draw line separator
+	//draw line separators
 	for(let i = 0; i < 30; i++){
 		PS.border(11, i, {top : 0, left : 3, bottom : 0, right : 0});
 		PS.borderColor(11, i, PS.COLOR_BLACK);
 	}
 
+	for(let i = 11; i < 25; i++){
+		PS.border(i, 11, {top : 0, left : 0, bottom : 3, right : 0});
+		PS.borderColor(i, 11, PS.COLOR_BLACK);
+	}
+
+	PS.glyph(13, 13, "M");
+	PS.glyph(14, 13, "A");
+	PS.glyph(15, 13, "T");
+	PS.glyph(16, 13, "C");
+	PS.glyph(17, 13, "H");
+
+	PS.glyph(19, 13, "T");
+	PS.glyph(20, 13, "H");
+	PS.glyph(21, 13, "E");
+
+	PS.glyph(15, 14, "B");
+	PS.glyph(16, 14, "A");
+	PS.glyph(17, 14, "S");
+	PS.glyph(18, 14, "E");
+	PS.glyph(19, 14, "S");
+	PS.glyph(20, 14, "!");
+	//yellow is A - 1
+	PS.color(12, 16, PS.COLOR_YELLOW);
+	PS.glyph(12, 16, "A");
+	PS.glyph(14, 16, "A");
+	PS.glyph(15, 16, "D");
+	PS.glyph(16, 16, "E");
+	PS.glyph(17, 16, "N");
+	PS.glyph(18, 16, "I");
+	PS.glyph(19, 16, "N");
+	PS.glyph(20, 16, "E");
+	//blue is C - 2
+	PS.color(12, 18, PS.COLOR_BLUE);
+	PS.glyph(12, 18, "C");
+	PS.glyph(14, 18, "C");
+	PS.glyph(15, 18, "Y");
+	PS.glyph(16, 18, "T");
+	PS.glyph(17, 18, "O");
+	PS.glyph(18, 18, "S");
+	PS.glyph(19, 18, "I");
+	PS.glyph(20, 18, "N");
+	PS.glyph(21, 18, "E");
+	//red is T - 3
+	PS.color(12, 20, PS.COLOR_RED);
+	PS.glyph(12, 20, "T");
+	PS.glyph(14, 20, "T");
+	PS.glyph(15, 20, "H");
+	PS.glyph(16, 20, "Y");
+	PS.glyph(17, 20, "M");
+	PS.glyph(18, 20, "I");
+	PS.glyph(19, 20, "N");
+	PS.glyph(20, 20, "E");
+	//green is G - 4
+	PS.color(12, 22, PS.COLOR_GREEN);
+	PS.glyph(12, 22, "G");
+	PS.glyph(14, 22, "G");
+	PS.glyph(15, 22, "U");
+	PS.glyph(16, 22, "A");
+	PS.glyph(17, 22, "N");
+	PS.glyph(18, 22, "I");
+	PS.glyph(19, 22, "N");
+	PS.glyph(20, 22, "E");
+
+
+	PS.color(12, 24, PS.COLOR_RED);
+	PS.color(13, 24, PS.COLOR_RED);
+	PS.color(14, 24, PS.COLOR_RED);
+	PS.glyph(14, 24, "T");
+	PS.glyph(15, 24, "A");
+	PS.color(15, 24, PS.COLOR_YELLOW);
+	PS.color(16, 24, PS.COLOR_YELLOW);
+	PS.color(17, 24, PS.COLOR_YELLOW);
+	PS.glyph(19, 24, "T");
+	PS.glyph(20, 24, "+");
+	PS.glyph(21, 24, "A");
+
+	PS.color(12, 26, PS.COLOR_GREEN);
+	PS.color(13, 26, PS.COLOR_GREEN);
+	PS.color(14, 26, PS.COLOR_GREEN);
+	PS.glyph(14, 26, "G");
+	PS.glyph(15, 26, "C");
+	PS.color(15, 26, PS.COLOR_BLUE);
+	PS.color(16, 26, PS.COLOR_BLUE);
+	PS.color(17, 26, PS.COLOR_BLUE);
+	PS.glyph(19, 26, "G");
+	PS.glyph(20, 26, "+");
+	PS.glyph(21, 26, "C");
+
 	displayBases();
+	findEmptyBase();
 
 	//load sounds that will be used
 	PS.audioLoad("fx_click"); //drag & drop
@@ -203,9 +295,9 @@ PS.init = function( system, options ) {
 
 function frame(){
 	if(!gameOver){
-		updateScore();
 		moveDown();
 		displayBases();
+		findEmptyBase();
 	}
 	else{
 		PS.debug("Game Over! Your score was " + score + "\n");
@@ -227,13 +319,59 @@ function updateScore(){
 //blue is C - 2
 //red is T - 3
 //green is G - 4
+function checkInput(userInputBase){
+	//get user input
+	if(lastEmptySlot === -1) return; //if we don't have a currently open slot, then we can't take the user input
+	strand2[startIndex + lastEmptySlot] = userInputBase; //put it into the strand data
+	switch(userInputBase){ //checks if score should increase
+		case 1:
+			if(strand1[startIndex + lastEmptySlot] === 3){ //A and T match
+				updateScore();
+			}
+			else{
+				//play error sound
+			}
+			break;
+		case 2:
+			if(strand1[startIndex + lastEmptySlot] === 4){ //C and G match
+				updateScore();
+			}
+			else{
+				//play error sound
+			}
+			break;
+		case 3:
+			if(strand1[startIndex + lastEmptySlot] === 1){ //T and A match
+				updateScore();
+			}
+			else{
+				//play error sound
+			}
+			break;
+		case 4:
+			if(strand1[startIndex + lastEmptySlot] === 2){ //G and C match
+				updateScore();
+			}
+			else{
+				//play error sound
+			}
+			break;
+	}
+	changeBorder(3, lastEmptySlot, false); //remove the border since it's been filled
+	displayBases(); //call the draw bases to update
+	findEmptyBase();
+}
+
+//yellow is A - 1
+//blue is C - 2
+//red is T - 3
+//green is G - 4
 function moveDown(){
 	generateRandomBase();
-	for(let i = 0; i < strand1slots.length; i++){ //strand1 and strand2 should be the same length
+	for(let i = 0; i < 12; i++) { //strand1 and strand2 should be the same length, there are 12 slots
 		//get strand1 color of next item and set it to the current item
 		let baseColor;
-
-		switch(strand1[startIndex + i + 1]){ //get the next
+		switch (strand1[startIndex + i + 1]) { //get the next
 			case 1:
 				baseColor = PS.COLOR_YELLOW;
 				break;
@@ -250,25 +388,20 @@ function moveDown(){
 
 		PS.spriteSolidColor(strand1slots[i], baseColor);
 		//get strand2 color of next item and set it to the current item
-		switch(strand2[startIndex + i + 1]){ //get the next
+		switch (strand2[startIndex + i + 1]) { //get the next
 			case 0:
-				if (i >= strand2slots.length) break;
 				baseColor = PS.COLOR_WHITE;
 				break;
 			case 1:
-				if (i >= strand2slots.length) break;
 				baseColor = PS.COLOR_YELLOW;
 				break;
 			case 2:
-				if (i >= strand2slots.length) break;
 				baseColor = PS.COLOR_BLUE;
 				break;
 			case 3:
-				if (i >= strand2slots.length) break;
 				baseColor = PS.COLOR_RED;
 				break;
 			case 4:
-				if (i >= strand2slots.length) break;
 				baseColor = PS.COLOR_GREEN;
 				break;
 		}
@@ -284,42 +417,96 @@ function moveDown(){
 //red is T - 3
 //green is G - 4
 function displayBases(){
-	for(let i = startIndex; i < startIndex+12; i++){ //using start index since the strand will move
+	for(let i = 0; i < 12; i++){ //using start index since the strand will move
 		if (i >= strand1slots.length) break;
-		switch(strand1[i]){ //get the base
+		switch(strand1[startIndex + i]){ //get the base
 			case 1:
 				PS.spriteSolidColor(strand1slots[i], PS.COLOR_YELLOW);
-				//PS.glyph(4, , "A");
+				PS.glyph(4, baseSlotNum[i], "A");
 				break;
 			case 2:
 				PS.spriteSolidColor(strand1slots[i], PS.COLOR_BLUE);
+				PS.glyph(4, baseSlotNum[i], "C");
 				break;
 			case 3:
 				PS.spriteSolidColor(strand1slots[i], PS.COLOR_RED);
+				PS.glyph(4, baseSlotNum[i], "T");
 				break;
 			case 4:
 				PS.spriteSolidColor(strand1slots[i], PS.COLOR_GREEN);
+				PS.glyph(4, baseSlotNum[i], "G");
 				break;
 		}
 		if (i >= strand2slots.length) break;
-		switch(strand2[i]){
+		switch(strand2[startIndex + i]){
 			case 0: //user needs to fill in
-				//do nothing
+				PS.spriteSolidColor(strand2slots[i], PS.COLOR_WHITE);
+				PS.glyph(5, baseSlotNum[i], "");
 				break;
 			case 1:
 				PS.spriteSolidColor(strand2slots[i], PS.COLOR_YELLOW);
+				PS.glyph(5, baseSlotNum[i], "A");
 				break;
 			case 2:
 				PS.spriteSolidColor(strand2slots[i], PS.COLOR_BLUE);
+				PS.glyph(5, baseSlotNum[i], "C");
 				break;
 			case 3:
 				PS.spriteSolidColor(strand2slots[i], PS.COLOR_RED);
+				PS.glyph(5, baseSlotNum[i], "T");
 				break;
 			case 4:
 				PS.spriteSolidColor(strand2slots[i], PS.COLOR_GREEN);
+				PS.glyph(5, baseSlotNum[i], "G");
 				break;
 		}
 	}
+}
+
+function findEmptyBase(){
+	let emptyFound = false;
+	for(let i = 0; i < 12; i++){
+		if(emptyFound) return;
+		if(strand2[startIndex + i] === 0){ //if this is empty
+			if(lastEmptySlot !== -1){
+				changeBorder(3, lastEmptySlot, false);
+			}
+			//remove the border, it doesn't matter the length bc just setting all borders to 0
+
+			emptyFound = true;
+			lastEmptySlot = i;
+			let spriteWidth;
+			if(i === 0 || i === 3 || i === 4 || i === 6 ||  i === 7 || i === 8 || i === 11){
+				//the length of the border should be different depending on which sprite it is, since the sprites have different widths
+				spriteWidth = 3;
+			}
+			else if(i === 1 || i === 2 || i === 10){
+				spriteWidth = 2;
+			}
+			else{
+				spriteWidth = 1;
+			}
+
+			//draw the border on the current empty slot
+			changeBorder(spriteWidth, lastEmptySlot, true);
+		}
+	}
+	if(!emptyFound){
+		lastEmptySlot = -1;
+	}
+}
+
+function changeBorder(spriteWidth, slotNum, drawBorder){
+	//outline empty slot so player knows where they're putting the thing
+	for(let j = 0; j < spriteWidth; j++) {
+		if(drawBorder){
+			PS.border(5 + j, baseSlotNum[slotNum], {top: 2, left: 0, bottom: 2, right: 0});
+		}
+		else{
+			PS.border(5 + j, baseSlotNum[slotNum], {top: 0, left: 0, bottom: 0, right: 0});
+		}
+	}
+
 }
 
 function drawHelix(){
@@ -385,31 +572,27 @@ function generateRandomBase(){
 	}
 }
 
-PS.touch = function( x, y, data, options ) {
-
-};
-
-PS.release = function( x, y, data, options ) {
-
-};
-
-PS.exitGrid = function( options ) {
-
-};
-
+//yellow is A - 1
+//blue is C - 2
+//red is T - 3
+//green is G - 4
 PS.keyDown = function( key, shift, ctrl, options ) {
 	switch(key){
 		case 97:
 			//a pressed
+			checkInput(1);
 			break;
 		case 99:
 			//c pressed
+			checkInput(2);
 			break;
 		case 103:
-			//g pressed
+			//t pressed
+			checkInput(4);
 			break;
 		case 116:
-			//t pressed
+			//g pressed
+			checkInput(3);
 			break;
 		case PS.KEY_SPACE:
 			//space pressed, ends game
