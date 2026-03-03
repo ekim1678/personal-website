@@ -284,12 +284,9 @@ PS.init = function( system, options ) {
 	findEmptyBase();
 
 	//load sounds that will be used
-	PS.audioLoad("fx_click"); //drag & drop
-	PS.audioLoad("xylo_a4"); //sprite 1 select
-	PS.audioLoad("xylo_b4"); //sprite 2 select
-	PS.audioLoad("xylo_c5"); //sprite 3 select
-	PS.audioLoad("perc_triangle"); //clear level sound
-	PS.audioLoad("fx_tada"); //finished all stages sound
+	PS.audioLoad("fx_ding");
+	PS.audioLoad("fx_rip");
+	PS.audioLoad("fx_click");
 
 };
 
@@ -298,6 +295,7 @@ function frame(){
 		moveDown();
 		displayBases();
 		findEmptyBase();
+		PS.audioPlay("fx_click", { volume: 0.1 });
 	}
 	else{
 		PS.debug("Game Over! Your score was " + score + "\n");
@@ -306,6 +304,7 @@ function frame(){
 }
 
 function updateScore(){
+	PS.audioPlay("fx_ding", { volume: 0.3 });
 	//score glyph text ends at (18, 1) so the actual score should start at (19, 1)
 	score += 1;
 	const scoreStr = String(score);
@@ -330,6 +329,7 @@ function checkInput(userInputBase){
 			}
 			else{
 				//play error sound
+				PS.audioPlay("fx_rip", { volume: 0.3 });
 			}
 			break;
 		case 2:
@@ -338,6 +338,7 @@ function checkInput(userInputBase){
 			}
 			else{
 				//play error sound
+				PS.audioPlay("fx_rip", { volume: 0.3 });
 			}
 			break;
 		case 3:
@@ -346,6 +347,7 @@ function checkInput(userInputBase){
 			}
 			else{
 				//play error sound
+				PS.audioPlay("fx_rip", { volume: 0.3 });
 			}
 			break;
 		case 4:
@@ -353,6 +355,7 @@ function checkInput(userInputBase){
 				updateScore();
 			}
 			else{
+				PS.audioPlay("fx_rip", { volume: 0.3 });
 				//play error sound
 			}
 			break;
@@ -577,6 +580,7 @@ function generateRandomBase(){
 //red is T - 3
 //green is G - 4
 PS.keyDown = function( key, shift, ctrl, options ) {
+	if(gameOver) return;
 	switch(key){
 		case 97:
 			//a pressed
