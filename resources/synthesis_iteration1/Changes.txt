@@ -1,0 +1,6 @@
+Changes made since last iteration:
+- Added a streak counter for correct matches and a score multiplier that changes for every 5 pairs matched correctly consecutively
+- The game gets faster each tick by 1/60th of a second until 15/60ths of a second
+
+Other notes:
+- 
