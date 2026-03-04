@@ -315,6 +315,7 @@ PS.init = function( system, options ) {
 	PS.audioLoad("fx_ding");
 	PS.audioLoad("fx_rip");
 	PS.audioLoad("fx_click");
+	PS.audioLoad("fx_coin1");
 
 };
 
@@ -338,14 +339,18 @@ function frame(){
 }
 
 function updateScore(){
-	PS.audioPlay("fx_ding", { volume: 0.3 });
 	//score glyph text ends at (18, 1) so the actual score should start at (19, 1)
 	score += multiplier;
 	streak += 1;
+	PS.audioPlay("fx_ding", { volume: 0.1, onEnd: multiplierSound});
+	displayScore();
+}
+
+function multiplierSound(){
 	if(streak % 5 === 0){ //every streak of five bases, increase multiplier
 		multiplier += 1;
+		PS.audioPlay("fx_coin1", { volume: 0.1 });
 	}
-	displayScore();
 }
 
 function displayScore(){
@@ -389,7 +394,7 @@ function checkInput(userInputBase){
 			}
 			else{
 				//play error sound
-				PS.audioPlay("fx_rip", { volume: 0.3 });
+				PS.audioPlay("fx_rip", { volume: 0.1 });
 				multiplier = 1;
 				streak = 0;
 				displayScore();
@@ -401,7 +406,7 @@ function checkInput(userInputBase){
 			}
 			else{
 				//play error sound
-				PS.audioPlay("fx_rip", { volume: 0.3 });
+				PS.audioPlay("fx_rip", { volume: 0.1 });
 				multiplier = 1;
 				streak = 0;
 				displayScore();
@@ -413,7 +418,7 @@ function checkInput(userInputBase){
 			}
 			else{
 				//play error sound
-				PS.audioPlay("fx_rip", { volume: 0.3 });
+				PS.audioPlay("fx_rip", { volume: 0.1 });
 				multiplier = 1;
 				streak = 0;
 				displayScore();
@@ -424,7 +429,7 @@ function checkInput(userInputBase){
 				updateScore();
 			}
 			else{
-				PS.audioPlay("fx_rip", { volume: 0.3 });
+				PS.audioPlay("fx_rip", { volume: 0.1 });
 				//play error sound
 				multiplier = 1;
 				streak = 0;
