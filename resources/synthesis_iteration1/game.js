@@ -558,16 +558,11 @@ function findEmptyBase(){
 	for(let i = 0; i < 12; i++){
 		if(emptyFound) return;
 		if(strand2[startIndex + i] === 0){ //if this is empty
-			if(lastEmptySlot !== -1){
-				changeBorder(3, lastEmptySlot, false);
-			}
-			//remove the border, it doesn't matter the length bc just setting all borders to 0
-
 			emptyFound = true;
 			lastEmptySlot = i;
 			let spriteWidth;
 			if(i === 0 || i === 3 || i === 4 || i === 6 ||  i === 7 || i === 8 || i === 11){
-				//the length of the border should be different depending on which sprite it is, since the sprites have different widths
+				//the length of the sprite should be different depending on which sprite it is, since the sprites have different widths
 				spriteWidth = 3;
 			}
 			else if(i === 1 || i === 2 || i === 10){
@@ -578,7 +573,7 @@ function findEmptyBase(){
 			}
 
 			//draw the border on the current empty slot
-			changeBorder(spriteWidth, lastEmptySlot, true);
+			changeBorder(spriteWidth, lastEmptySlot);
 		}
 	}
 	if(!emptyFound){
@@ -586,19 +581,11 @@ function findEmptyBase(){
 	}
 }
 
-function changeBorder(spriteWidth, slotNum, drawBorder){
-	//outline empty slot so player knows where they're putting the thing
+function changeBorder(spriteWidth, slotNum){
+	//change color of first empty slot so player knows where they're putting the thing
 	for(let j = 0; j < spriteWidth; j++) {
-		if(drawBorder){
-			PS.spriteSolidColor(strand2slots[slotNum], PS.COLOR_WHITE);
-			//PS.border(5 + j, baseSlotNum[slotNum], {top: 2, left: 0, bottom: 2, right: 0});
-			//PS.borderColor(5 + j, baseSlotNum[slotNum], PS.COLOR_GRAY_DARK);
-		}
-		else{
-			//PS.border(5 + j, baseSlotNum[slotNum], {top: 0, left: 0, bottom: 0, right: 0});
-		}
+		PS.spriteSolidColor(strand2slots[slotNum], PS.COLOR_WHITE);
 	}
-
 }
 
 function drawHelix(){
