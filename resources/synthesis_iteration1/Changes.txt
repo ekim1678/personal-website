@@ -1,6 +1,11 @@
 Changes made since last iteration:
 - Added a streak counter for correct matches and a score multiplier that changes for every 5 pairs matched correctly consecutively
+- Sound effects play for each correct match and for every multiplier increase
 - The game gets faster each tick by 1/60th of a second until 15/60ths of a second
+- Visual changes to grid and empty slots, the slot where user input will be logged is highlighted
 
 Other notes:
-- 
+- Players seemed to like the pace, but wanted it to get faster as time went on to give the player time to adjust to what was happening and then a challenge as it continued
+- The metaphor was received well. I'm not sure if I was too straightforward by literally labelling the bases with their scientific name, but everyone who filled out the survey recognized the game as a metaphor for DNA!
+- Some found it challenging to tell where their next input was going to be logged, so I added visual effects to indicate that
+- Players wanted to be rewarded for multiple correct matches, so I added the multiplier

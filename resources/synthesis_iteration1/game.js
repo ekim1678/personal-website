@@ -67,6 +67,7 @@ PS.init = function( system, options ) {
 	// Uncomment the following code line
 	// to verify operation:
 	PS.gridSize(30, 30);
+	PS.color(PS.ALL, PS.ALL, PS.COLOR_GRAY_LIGHT);
 
 	PS.statusText( "Synthesis" );
 	PS.seed(0.5); //set seed
@@ -340,17 +341,24 @@ function frame(){
 
 function updateScore(){
 	//score glyph text ends at (18, 1) so the actual score should start at (19, 1)
-	score += multiplier;
-	streak += 1;
-	PS.audioPlay("fx_ding", { volume: 0.1, onEnd: multiplierSound});
+	if (streak > 0)
+	{
+		score += multiplier;
+		if (streak % 5 === 0)
+		{
+			multiplier += 1;
+			PS.audioPlay("fx_ding", { volume: 0.1, onEnd: multiplierSound});
+		}
+		else
+		{
+			PS.audioPlay("fx_ding", { volume: 0.1});
+		}
+	}
 	displayScore();
 }
 
 function multiplierSound(){
-	if(streak % 5 === 0){ //every streak of five bases, increase multiplier
-		multiplier += 1;
-		PS.audioPlay("fx_coin1", { volume: 0.1 });
-	}
+	PS.audioPlay("fx_coin1", { volume: 0.1 });
 }
 
 function displayScore(){
@@ -390,7 +398,7 @@ function checkInput(userInputBase){
 	switch(userInputBase){ //checks if score should increase
 		case 1:
 			if(strand1[startIndex + lastEmptySlot] === 3){ //A and T match
-				updateScore();
+				streak++;
 			}
 			else{
 				//play error sound
@@ -402,7 +410,7 @@ function checkInput(userInputBase){
 			break;
 		case 2:
 			if(strand1[startIndex + lastEmptySlot] === 4){ //C and G match
-				updateScore();
+				streak++;
 			}
 			else{
 				//play error sound
@@ -414,7 +422,7 @@ function checkInput(userInputBase){
 			break;
 		case 3:
 			if(strand1[startIndex + lastEmptySlot] === 1){ //T and A match
-				updateScore();
+				streak++;
 			}
 			else{
 				//play error sound
@@ -426,7 +434,7 @@ function checkInput(userInputBase){
 			break;
 		case 4:
 			if(strand1[startIndex + lastEmptySlot] === 2){ //G and C match
-				updateScore();
+				streak++;
 			}
 			else{
 				PS.audioPlay("fx_rip", { volume: 0.1 });
@@ -437,6 +445,8 @@ function checkInput(userInputBase){
 			}
 			break;
 	}
+
+	updateScore();
 	changeBorder(3, lastEmptySlot, false); //remove the border since it's been filled
 	displayBases(); //call the draw bases to update
 	findEmptyBase();
@@ -470,7 +480,7 @@ function moveDown(){
 		//get strand2 color of next item and set it to the current item
 		switch (strand2[startIndex + i + 1]) { //get the next
 			case 0:
-				baseColor = PS.COLOR_WHITE;
+				baseColor = PS.COLOR_GRAY_LIGHT;
 				break;
 			case 1:
 				baseColor = PS.COLOR_YELLOW;
@@ -520,7 +530,7 @@ function displayBases(){
 		if (i >= strand2slots.length) break;
 		switch(strand2[startIndex + i]){
 			case 0: //user needs to fill in
-				PS.spriteSolidColor(strand2slots[i], PS.COLOR_WHITE);
+				PS.spriteSolidColor(strand2slots[i], PS.COLOR_GRAY_LIGHT);
 				PS.glyph(5, baseSlotNum[i], "");
 				break;
 			case 1:
@@ -580,10 +590,12 @@ function changeBorder(spriteWidth, slotNum, drawBorder){
 	//outline empty slot so player knows where they're putting the thing
 	for(let j = 0; j < spriteWidth; j++) {
 		if(drawBorder){
-			PS.border(5 + j, baseSlotNum[slotNum], {top: 2, left: 0, bottom: 2, right: 0});
+			PS.spriteSolidColor(strand2slots[slotNum], PS.COLOR_WHITE);
+			//PS.border(5 + j, baseSlotNum[slotNum], {top: 2, left: 0, bottom: 2, right: 0});
+			//PS.borderColor(5 + j, baseSlotNum[slotNum], PS.COLOR_GRAY_DARK);
 		}
 		else{
-			PS.border(5 + j, baseSlotNum[slotNum], {top: 0, left: 0, bottom: 0, right: 0});
+			//PS.border(5 + j, baseSlotNum[slotNum], {top: 0, left: 0, bottom: 0, right: 0});
 		}
 	}
 
