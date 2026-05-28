@@ -19,5 +19,17 @@ ul li a {
 }
 
 ul li a:hover {
-    background-color: #111111;
+    text-decoration-line: underline;
+    background-color: #6b6b6b;
+}
+
+h1{
+    text-align: center
+}
+
+.home{
+    background-color: #000000;
+    display: block;
+    color: white;
+    text-align: center;
 }
