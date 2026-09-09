@@ -28,8 +28,11 @@ h1{
 }
 
 .home{
+    height: auto;
     background-color: #000000;
     display: block;
     color: white;
     text-align: center;
+    padding: 14px;
+    margin: 0;
 }
