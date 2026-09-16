@@ -29,6 +29,30 @@ ul li a:hover {
      background-color: #6b6b6b;
 }
 
+ ul li:hover .subnav {
+     display: block;
+     background-color: white;
+     order: 1;
+  }
+
+.subnav {
+    list-style-type: none;
+    position: absolute;
+    display: none;
+}
+
+.subnavcontent{
+    display: block;
+    justify-content: left;
+    color: black;
+}
+
+.subnavcontent:hover {
+    background-color: lightgray;
+    color: #000000;
+    text-decoration-line: underline;
+}
+
 h1 {
     text-align: center
 }
