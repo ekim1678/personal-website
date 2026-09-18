@@ -24,10 +24,16 @@ ul li a {
     text-decoration: none;
 }
 
+
 ul li a:hover {
-     text-decoration-line: underline;
      background-color: #6b6b6b;
+     text-decoration-line: none;
 }
+
+ul li a[href]:hover {
+      background-color: #6b6b6b;
+      text-decoration-line: underline;
+ }
 
  ul li:hover .subnav {
      display: block;
@@ -62,6 +68,7 @@ h1 {
     background-color: #000000;
     display: block;
     color: white;
+    align-self: center;
     text-align: center;
     padding: 14px;
     margin: 0;
