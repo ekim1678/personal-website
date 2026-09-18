@@ -60,7 +60,15 @@ ul li a[href]:hover {
 }
 
 h1 {
-    text-align: center
+    text-align: center;
+}
+
+p {
+    padding: 0px 0px 0px 50px;
+}
+
+.page {
+    padding: 0px 0px 0px 100px;
 }
 
 .home {
