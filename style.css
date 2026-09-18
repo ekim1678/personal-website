@@ -1,5 +1,6 @@
 * {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-sizing:border-box;
 }
 
 .navlist {
@@ -63,7 +64,7 @@ h1 {
     text-align: center;
 }
 
-p {
+.page p {
     padding: 0px 0px 0px 50px;
 }
 
@@ -82,9 +83,36 @@ p {
     margin: 0;
 }
 
+.column {
+    float: left;
+    width: 33%;
+    padding: 0 10px;
+}
+
+.row {
+    margin: 10px;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
 .card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     padding: 16px;
     text-align: center;
-    background-color: #f1f1f1;
+    background-color: #e0e0e0;
+}
+
+.tag {
+    display: inline-block;
+    color: white;
+    padding: 8px 10px;
+    border-radius: 25px;
+    background-color: #2196F3;
+    margin-top: 8px;
+    font-size:smaller;
 }
