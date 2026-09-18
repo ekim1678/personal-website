@@ -74,43 +74,9 @@ h1 {
     margin: 0;
 }
 
-@media screen and (width <= 430px){
-    * {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .navlist {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        background-color: #333333;
-        display: flex;
-        justify-content: center;
-    }
-
-    ul li a {
-        display: block;
-        color: white;
-        padding: 14px 16px;
-        text-decoration: none;
-    }
-
-    ul li a:hover {
-        text-decoration-line: underline;
-        background-color: #6b6b6b;
-     }
-
-    h1 {
-        text-align: center
-    }
-
-    .home {
-        height: auto;
-        background-color: #000000;
-        display: block;
-        color: white;
-        text-align: center;
-        padding: 14px;
-        margin: 0;
-    }
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 16px;
+    text-align: center;
+    background-color: #f1f1f1;
 }
